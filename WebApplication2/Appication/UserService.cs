@@ -19,38 +19,44 @@ namespace WebApplication2.Appication
         {
             commands.ForEach(command =>
             {
-                string commandType = command.GetType().Name;
 
-                switch (commandType)
+                switch (command.Type)
                 {
                     case "LegalCommand":
                         {
+                            // Check by repository and dosn't exist
                             Legal legal = new Legal()
                             {
-                                Id = (command as LegalCommand).Id,
-                                Age = (command as LegalCommand).Age
+                                Id = (command as LegalCommand).Id.Value,
+                                Age = (command as LegalCommand).Age.Value
                             };
 
-                            // Check by repository and dosn't exist
                             _userRepository.AddLegal(legal);
 
                             // Check by repository and dose exist
+                            var oldLegal = _userRepository.GetLegal((command as LegalCommand).Id.Value);
+                            oldLegal.Id = (command as LegalCommand).Id.Enable ? (command as LegalCommand).Id.Value : oldLegal.Id;
+                            oldLegal.Age = (command as LegalCommand).Age.Enable ? (command as LegalCommand).Age.Value : oldLegal.Age;
                             _userRepository.UpdateLegal(legal);
 
                             break;
                         }
                     case "RegisterCommand":
                         {
+                            // Check by repository and dosn't exist
                             Register register = new Register()
                             {
-                                Id = (command as RegisterCommand).Id,
-                                Name = (command as RegisterCommand).Name
+                                Id = (command as RegisterCommand).Id.Value,
+                                Name = (command as RegisterCommand).Name.Value
                             };
 
-                            // Check by repository and dosn't exist
                             _userRepository.AddRegister(register);
 
                             // Check by repository and dosn't exist
+                            var oldRegister = _userRepository.GetRegister((command as RegisterCommand).Id.Value);
+                            oldRegister.Id = (command as RegisterCommand).Id.Enable ? (command as RegisterCommand).Id.Value : oldRegister.Id;
+                            oldRegister.Name = (command as RegisterCommand).Name.Enable ? (command as RegisterCommand).Name.Value : oldRegister.Name;
+
                             _userRepository.UpdateRegister(register);
 
                             break;

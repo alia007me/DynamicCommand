@@ -18,20 +18,29 @@ namespace WebApplication2.Repository
         {
             Console.WriteLine("Legal Updated");
 
-            return null;
+            return Task.CompletedTask;
+        }
+
+        public Legal GetLegal(int id)
+        {
+            return new Legal() { Id = id, Age = 15 };
         }
 
         public Task AddRegister(Register register)
         {
             Console.WriteLine("Register Accepted");
 
-            return null;
+            return Task.CompletedTask;
         }
         public Task UpdateRegister(Register register)
         {
             Console.WriteLine("Register Updated");
 
-            return null;
+            return Task.CompletedTask;
+        }
+        public Register GetRegister(int id)
+        {
+            return new Register() { Id = id, Name = "Ali" };
         }
     }
 }

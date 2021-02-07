@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
 using WebApplication2.Appication;
+using System.Reflection;
 
 namespace WebApplication2.Controllers
 {
@@ -27,11 +28,14 @@ namespace WebApplication2.Controllers
 
             jsCommandsList.ForEach(x =>
             {
-                string type = x["type"].ToString();
+                string type = ((JObject)x).GetValue("type").ToString();
 
-                x.ToList().RemoveAt(0);
+                var _type = Assembly.GetAssembly(typeof(BaseCommand)).GetTypes().SingleOrDefault(c => c.Name == type);
 
-                commands.Add((BaseCommand)x.ToObject(Type.GetType(type)));
+                commands.Add((BaseCommand)x.ToObject(_type, new JsonSerializer()
+                {
+                    MissingMemberHandling = MissingMemberHandling.Error
+                }));
             });
 
             UserService userService = new UserService();

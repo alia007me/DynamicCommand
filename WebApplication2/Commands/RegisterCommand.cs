@@ -7,7 +7,7 @@ namespace WebApplication2.Commands
 {
     public class RegisterCommand : BaseCommand
     {
-        public string Name { get; set; }
+        public CommandField<string> Name { get; set; }
         public override void Validate()
         {
             Console.WriteLine("Validated!");
