@@ -8,5 +8,9 @@ namespace WebApplication2.Commands
     public class LegalCommand : BaseCommand
     {
         public int Age { get; set; }
+        public override void Validate()
+        {
+            Console.WriteLine("Validated!");
+        }
     }
 }

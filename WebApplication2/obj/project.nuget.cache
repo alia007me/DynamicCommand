@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "tHU1rCM4v0dXJ9soXF0jZduf2U2YEXzQsst4Qw+ZuAIDCCl72x/QtvBMOjsGjJMYk09q1GxDRV81TICSfRK7sA==",
+  "dgSpecHash": "NfufooJ9xV+42Ssgyeki3x0Q8z4ZqLvq9lvUnSNG9zJnJk2bL29sy1eMaFOvSyAFIa3fNbQ3xeE7/VVid0oxPQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\alia007\\Desktop\\code inside\\Fino\\Original\\TestForDunamicCommand\\WebApplication2\\WebApplication2.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\alia007\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\alia007\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
     "C:\\Users\\alia007\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.10\\microsoft.netcore.app.host.win-x64.3.1.10.nupkg.sha512"
   ],

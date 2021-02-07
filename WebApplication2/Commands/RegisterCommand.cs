@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication2.Commands
 {
-    public class RegisterCommand
+    public class RegisterCommand : BaseCommand
     {
         public string Name { get; set; }
+        public override void Validate()
+        {
+            Console.WriteLine("Validated!");
+        }
     }
 }
