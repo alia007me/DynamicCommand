@@ -23,7 +23,13 @@ namespace WebApplication2.Controllers
             JObject jsonObjectCommands = JObject.Parse(jsonCommands.ToString());
 
             var jsCommandsList = jsonObjectCommands["commands"].ToList();
-            var permitsList = jsonObjectCommands["Permit"].ToList().Cast<string>();
+            var permitsList = jsonObjectCommands["Permit"].ToList();
+
+            List<string> permits = new List<string>();
+            permitsList.ForEach(p =>
+            {
+                permits.Add(p.ToString());
+            });
 
             List<BaseCommand> commands = new List<BaseCommand>();
 
@@ -41,7 +47,7 @@ namespace WebApplication2.Controllers
 
             UserService userService = new UserService();
 
-            userService.Register(commands, (List<string>)permitsList);
+            userService.Register(commands, permits);
 
             return Ok();
         }

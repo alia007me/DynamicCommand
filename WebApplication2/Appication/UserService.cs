@@ -30,51 +30,6 @@ namespace WebApplication2.Appication
                 AddOrUpdateLegalCommand(legalCommand, permits);
             });
 
-            commands.ForEach(command =>
-            {
-
-                switch (command.Type)
-                {
-
-                    case "LegalCommand":
-                        {
-                            // Check by repository and dosn't exist
-                            Legal legal = new Legal()
-                            {
-                                Id = (command as LegalCommand).Id,
-                                Age = (command as LegalCommand).Age
-                            };
-
-                            _userRepository.AddLegal(legal);
-
-                            // Check by repository and dose exist
-                            var oldLegal = _userRepository.GetLegal((command as LegalCommand).Id);
-                            ;
-                            _userRepository.UpdateLegal(legal);
-
-                            break;
-                        }
-                    case "RegisterCommand":
-                        {
-                            // Check by repository and dosn't exist
-                            Register register = new Register()
-                            {
-                                Id = (command as RegisterCommand).Id,
-                                Name = (command as RegisterCommand).Name
-                            };
-
-                            _userRepository.AddRegister(register);
-
-                            // Check by repository and dosn't exist
-                            var oldRegister = _userRepository.GetRegister((command as RegisterCommand).Id);
-
-                            _userRepository.UpdateRegister(register);
-
-                            break;
-                        }
-                }
-            });
-
             // Save
 
             return null;
@@ -83,6 +38,7 @@ namespace WebApplication2.Appication
         private void AddOrUpdateRegisterCommand(RegisterCommand command, List<string> permits)
         {
             // Check by repository and dosn't exist
+            // Create
             Register register = new Register()
             {
                 Id = command.Id,
@@ -92,6 +48,7 @@ namespace WebApplication2.Appication
             _userRepository.AddRegister(register);
 
             // Check by repository and dosn't exist
+            // Update
             var oldRegister = _userRepository.GetRegister(command.Id);
             oldRegister.Id = IsInPermits(permits, "Id") ? command.Id : oldRegister.Id;
             oldRegister.Name = IsInPermits(permits, "Name") ? command.Name : oldRegister.Name;
@@ -101,6 +58,7 @@ namespace WebApplication2.Appication
         private void AddOrUpdateLegalCommand(LegalCommand command, List<string> permits)
         {
             // Check by repository and dosn't exist
+            // Create
             Legal legal = new Legal()
             {
                 Id = command.Id,
@@ -110,13 +68,12 @@ namespace WebApplication2.Appication
             _userRepository.AddLegal(legal);
 
             // Check by repository and dose exist
+            // Update
             var oldLegal = _userRepository.GetLegal(command.Id);
             oldLegal.Id = IsInPermits(permits, "Id") ? command.Id : oldLegal.Id;
             oldLegal.Age = IsInPermits(permits, "Age") ? command.Age : oldLegal.Age;
 
             _userRepository.UpdateLegal(oldLegal);
-
-
         }
 
         private bool IsInPermits(List<string> permits, string permit)
