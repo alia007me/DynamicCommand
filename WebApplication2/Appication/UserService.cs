@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebApplication2.Commands;
 using WebApplication2.Domain;
 using WebApplication2.Repository;
+using System.Linq;
 
 namespace WebApplication2.Appication
 {
@@ -15,28 +16,40 @@ namespace WebApplication2.Appication
         {
             _userRepository = new UserRepository();
         }
-        public Task Register(List<BaseCommand> commands)
+        public Task Register(List<BaseCommand> commands, List<string> permits)
         {
+            var registerCommands = commands.OfType<RegisterCommand>().ToList();
+            registerCommands.ForEach(registerCommand =>
+            {
+                AddOrUpdateRegisterCommand(registerCommand, permits);
+            });
+
+            var legalCommands = commands.OfType<LegalCommand>().ToList();
+            legalCommands.ForEach(legalCommand =>
+            {
+                AddOrUpdateLegalCommand(legalCommand, permits);
+            });
+
             commands.ForEach(command =>
             {
 
                 switch (command.Type)
                 {
+
                     case "LegalCommand":
                         {
                             // Check by repository and dosn't exist
                             Legal legal = new Legal()
                             {
-                                Id = (command as LegalCommand).Id.Value,
-                                Age = (command as LegalCommand).Age.Value
+                                Id = (command as LegalCommand).Id,
+                                Age = (command as LegalCommand).Age
                             };
 
                             _userRepository.AddLegal(legal);
 
                             // Check by repository and dose exist
-                            var oldLegal = _userRepository.GetLegal((command as LegalCommand).Id.Value);
-                            oldLegal.Id = (command as LegalCommand).Id.Enable ? (command as LegalCommand).Id.Value : oldLegal.Id;
-                            oldLegal.Age = (command as LegalCommand).Age.Enable ? (command as LegalCommand).Age.Value : oldLegal.Age;
+                            var oldLegal = _userRepository.GetLegal((command as LegalCommand).Id);
+                            ;
                             _userRepository.UpdateLegal(legal);
 
                             break;
@@ -46,16 +59,14 @@ namespace WebApplication2.Appication
                             // Check by repository and dosn't exist
                             Register register = new Register()
                             {
-                                Id = (command as RegisterCommand).Id.Value,
-                                Name = (command as RegisterCommand).Name.Value
+                                Id = (command as RegisterCommand).Id,
+                                Name = (command as RegisterCommand).Name
                             };
 
                             _userRepository.AddRegister(register);
 
                             // Check by repository and dosn't exist
-                            var oldRegister = _userRepository.GetRegister((command as RegisterCommand).Id.Value);
-                            oldRegister.Id = (command as RegisterCommand).Id.Enable ? (command as RegisterCommand).Id.Value : oldRegister.Id;
-                            oldRegister.Name = (command as RegisterCommand).Name.Enable ? (command as RegisterCommand).Name.Value : oldRegister.Name;
+                            var oldRegister = _userRepository.GetRegister((command as RegisterCommand).Id);
 
                             _userRepository.UpdateRegister(register);
 
@@ -67,6 +78,50 @@ namespace WebApplication2.Appication
             // Save
 
             return null;
+        }
+
+        private void AddOrUpdateRegisterCommand(RegisterCommand command, List<string> permits)
+        {
+            // Check by repository and dosn't exist
+            Register register = new Register()
+            {
+                Id = command.Id,
+                Name = command.Name
+            };
+
+            _userRepository.AddRegister(register);
+
+            // Check by repository and dosn't exist
+            var oldRegister = _userRepository.GetRegister(command.Id);
+            oldRegister.Id = IsInPermits(permits, "Id") ? command.Id : oldRegister.Id;
+            oldRegister.Name = IsInPermits(permits, "Name") ? command.Name : oldRegister.Name;
+
+            _userRepository.UpdateRegister(register);
+        }
+        private void AddOrUpdateLegalCommand(LegalCommand command, List<string> permits)
+        {
+            // Check by repository and dosn't exist
+            Legal legal = new Legal()
+            {
+                Id = command.Id,
+                Age = command.Age
+            };
+
+            _userRepository.AddLegal(legal);
+
+            // Check by repository and dose exist
+            var oldLegal = _userRepository.GetLegal(command.Id);
+            oldLegal.Id = IsInPermits(permits, "Id") ? command.Id : oldLegal.Id;
+            oldLegal.Age = IsInPermits(permits, "Age") ? command.Age : oldLegal.Age;
+
+            _userRepository.UpdateLegal(oldLegal);
+
+
+        }
+
+        private bool IsInPermits(List<string> permits, string permit)
+        {
+            return permits.Any(p => p == permit);
         }
     }
 }

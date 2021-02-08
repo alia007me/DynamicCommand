@@ -23,6 +23,7 @@ namespace WebApplication2.Controllers
             JObject jsonObjectCommands = JObject.Parse(jsonCommands.ToString());
 
             var jsCommandsList = jsonObjectCommands["commands"].ToList();
+            var permitsList = jsonObjectCommands["Permit"].ToList().Cast<string>();
 
             List<BaseCommand> commands = new List<BaseCommand>();
 
@@ -30,7 +31,7 @@ namespace WebApplication2.Controllers
             {
                 string type = ((JObject)x).GetValue("type").ToString();
 
-                var _type = Assembly.GetAssembly(typeof(BaseCommand)).GetTypes().SingleOrDefault(c => c.Name == type);
+                Type _type = Assembly.GetAssembly(typeof(BaseCommand)).GetTypes().SingleOrDefault(c => c.Name == type);
 
                 commands.Add((BaseCommand)x.ToObject(_type, new JsonSerializer()
                 {
@@ -40,7 +41,7 @@ namespace WebApplication2.Controllers
 
             UserService userService = new UserService();
 
-            userService.Register(commands);
+            userService.Register(commands, (List<string>)permitsList);
 
             return Ok();
         }

@@ -7,7 +7,7 @@ namespace WebApplication2.Commands
 {
     public class LegalCommand : BaseCommand
     {
-        public CommandField<int> Age { get; set; }
+        public int Age { get; set; }
         public override void Validate()
         {
             Console.WriteLine("Validated!");
